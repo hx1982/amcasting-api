@@ -1,0 +1,2 @@
+class Superannuation < ApplicationRecord
+end

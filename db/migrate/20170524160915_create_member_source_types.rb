@@ -1,0 +1,12 @@
+class CreateMemberSourceTypes < ActiveRecord::Migration[5.0]
+  def change
+    create_table :member_source_types do |t|
+      t.string :code
+      t.string :name
+      t.string :description
+      t.integer :sequence
+
+      t.timestamps
+    end
+  end
+end
