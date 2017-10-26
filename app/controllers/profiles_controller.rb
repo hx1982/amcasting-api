@@ -40,7 +40,7 @@ class ProfilesController < ApplicationController
     photos = @profile.profile_photo
       .joins(artist_medium: [{medium: :medium_detail}])
       .order(:sequence)
-    primary_photo = photos.where('profile_photos.is_primary = 1').first
+    primary_photo = photos.where('profile_photos.is_primary = true').first
     primary_photo = photos.first if !primary_photo
     pp primary_photo
     json_response({

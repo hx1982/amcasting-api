@@ -2,12 +2,12 @@ class ProfileItemsController < ApplicationController
   def index
     rs = ProfileItem.joins([:profile_item_value, :profile_item_type])
     .where('profile_items.profile_id = ?', params[:profile_id])
-    .select('profile_item_values.id,profile_items.profile_item_type_code,
-      CASE profile_item_types.value_code
-      WHEN "CONV" THEN  profile_item_values.conversion_id
-      WHEN "MIMA" THEN  profile_item_values.value
+    .select("profile_item_values.id,profile_items.profile_item_type_code,
+      CASE
+      WHEN profile_item_types.value_code = 'CONV' THEN  profile_item_values.conversion_id
+      WHEN profile_item_types.value_code = 'MIMA' THEN  profile_item_values.value
       ELSE profile_item_values.profile_value_item_type_value_id END as value
-    ')
+    ")
     json_response({
         profile_item: rs
     })
