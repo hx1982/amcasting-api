@@ -1,6 +1,5 @@
 class ProfileArtistTypesController < ApplicationController
   before_action :set_profile, only: [:index]
-  before_action :set_profile_artist_type, only: [:update, :destroy]
 
   def index
     json_response({
@@ -13,41 +12,24 @@ class ProfileArtistTypesController < ApplicationController
     })
   end
 
-  def create
-    duplicateChecking()
-    result = ProfileArtistType.create!(profile_artist_type_param)
-    json_response({
-        profile_artist_type: result
-    })
-  end
-
-  def update
-    duplicateChecking()
-    @profile_artist_type.update(profile_artist_type_param)
-    head :no_content
-  end
-
-  def destroy
-    @profile_artist_type.destroy()
-    head :no_content
+  def saveProfileArtistType
+    if params[:artistTypes].present? and params[:profile_id].present?
+      @profile= Profile.find(params[:profile_id])
+      @profile.profile_artist_type.clear()
+      params[:artistTypes].each do |index, artistType|
+        if artistType[:id].present? and
+          artistType[:sequence].present?
+          @profile.profile_artist_type.create!({
+            :artist_type_id => artistType[:id],
+            :sequence => artistType[:sequence],
+            :is_primary => artistType[:is_primary],
+          });
+        end
+      end
+    end
   end
 
   private
-  def duplicateChecking
-    count = ProfileArtistType
-      .where('profile_id = ? and artist_type_id= ? and id != ?', profile_artist_type_param[:profile_id],
-        profile_artist_type_param[:artist_type_id], params[:id] || 0 )
-      .count
-    raise(ExceptionHandler::RecordDuplidation, Message.duplication_record) if count > 0
-  end
-  def profile_artist_type_param
-    params.require(:profile_artist_type).permit(:is_primary, :profile_id, :sequence, :artist_type_id)
-  end
-
-  def set_profile_artist_type
-    @profile_artist_type = ProfileArtistType.find(params[:id]) if params[:id]
-  end
-
   def set_profile
     @profile = Profile.find(params[:profile_id]) if params[:profile_id]
   end

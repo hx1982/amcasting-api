@@ -4,6 +4,12 @@ class ProfileItemsController < ApplicationController
     .where('profile_items.profile_id = ?', params[:profile_id])
     .select("profile_item_values.id,profile_items.profile_item_type_code,
       CASE
+      WHEN profile_items.is_display = true THEN false
+      WHEN profile_items.is_display = false THEN true
+      ELSE false
+      END as is_hidden
+      ,
+      CASE
       WHEN profile_item_types.value_code = 'CONV' THEN  profile_item_values.conversion_id
       WHEN profile_item_types.value_code = 'MIMA' THEN  profile_item_values.value
       ELSE profile_item_values.profile_value_item_type_value_id END as value
@@ -23,7 +29,7 @@ class ProfileItemsController < ApplicationController
             profile_item_type_code: stats[:profile_item_type_code],
             profile_item_type_id: stats[:profile_item_type_id],
             profile_id: params[:profile_id],
-            is_display: params[:is_display]
+            is_display: stats[:is_display]
           )
           stats[:values].each do |value|
             if stats[:type] == 'CONV'

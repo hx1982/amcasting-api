@@ -42,6 +42,7 @@ Rails.application.routes.draw do
   end
 
   resources :profile_artist_types do
+    post 'saveProfileArtistType', on: :collection
   end
 
   resources :medium_details do
@@ -76,5 +77,5 @@ Rails.application.routes.draw do
   resources :media
 
   #static uploads
-  
+
 end
