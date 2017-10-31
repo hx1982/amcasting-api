@@ -13,4 +13,8 @@ class Member < ApplicationRecord
   validates_presence_of :first_name, :last_name, :gender_code,
     :member_type, :member_source_type, :account_status_type,
     :user
+
+  def full_name
+    [first_name, middle_name, last_name].select(&:present?).join(' ').titleize
+  end
 end

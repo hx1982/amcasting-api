@@ -7,7 +7,8 @@ class AuthenticationController < ApplicationController
     json_response({
       auth_token: result[:token],
       email: result[:user].email,
-      current_member_id: result[:user].member.id
+      current_member_id: result[:user].member.id,
+      current_member_name: result[:user].member.full_name
     })
   end
 
